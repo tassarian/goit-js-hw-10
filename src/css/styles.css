@@ -18,3 +18,42 @@ body {
   max-width: 320px;
   margin-bottom: 16px;
 }
+
+.country__subtitle {
+  font-weight: bold;
+}
+
+.subtitle__value {
+  font-weight: normal;
+}
+
+.country__flag {
+  margin-right: 5px;
+}
+
+.country__list--img {
+  
+  padding-left: 0;
+}
+
+.country__list--item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.country-list {
+  padding: 0;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  font-weight: 500;
+  margin: 0;
+}
+
+.country__title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 0;
+}
