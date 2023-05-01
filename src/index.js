@@ -1,5 +1,4 @@
 import './css/styles.css';
-// import fetchCountries from './fetchCountries';
 import Notiflix from 'notiflix';
 import debounce from 'lodash.debounce';
 import fetchCountries from './fetchCountries';
@@ -14,42 +13,40 @@ const countryInfo = document.querySelector('.country-info');
 
 searchInput.addEventListener('input', debounce(handleOnClick ,DEBOUNCE_DELAY))
 
-
 function handleOnClick(e) {
     let filter = e.target.value.toLowerCase().trim();
-    if (filter) {
-        fetchCountries(filter)
-            .then(dataCountry => {
-            if (dataCountry.length > 10) {
-                return Notiflix.Notify.info('Too many matches found. Please enter a more specific name.')
-            }
-            else if (dataCountry.length <= 10 && dataCountry.length !== 1) {
-                countryInfo.innerHTML = '';
-                renderManyCountries(dataCountry)
+    fetchCountries(filter) 
+        .then((dataCountry) => {
+            if (dataCountry.length === 0) {
+                clearData();
+
+            } else if (dataCountry.length <= 10 && dataCountry.length !== 1) {
+                renderManyCountries(dataCountry);
+
             } else if (dataCountry.length === 1) {
-                countryList.innerHTML = '';
-                renderCountryCard(dataCountry)
-                }
-            })
-            .catch(error => {
-                countryList.innerHTML = '';
-                countryInfo.innerHTML = '';
-                 Notiflix.Notify.failure('Oops, there is no country with that name')
-            })
-        
-        
+                renderCountryCard(dataCountry);
+
+            } else if (dataCountry.length > 10) {
+                clearData();
+                Notiflix.Notify.info('Too many matches found. Please enter a more specific name.');
+            }
+        })
+        .catch ((error) => {
+            Notiflix.Notify.failure("Oops, there is no country with that name");
+        })
     }
-    else {
-        countryList.innerHTML = '';
-        countryInfo.innerHTML = '';
-    }
+
+function clearData() {
+    countryInfo.innerHTML = "";
+    countryList.innerHTML = "";
 }
 
 function renderManyCountries(obj){
     const country = obj.map(({ name, flags }) =>
-        `<li class="country__list--item"><img class="country__list--img" src="${flags.svg}" alt="${name.official} flag" width="50">${name.official}</li>`)
-        .join('')
-    countryList.innerHTML = country;
+        `<li class="country__list--item"><img class="country__list--img" src="${flags.svg}" alt="${name.official} flag" width="50">${name.official}</li>`
+    ).join('')
+    countryList.insertAdjacentHTML('beforeend', country);
+    countryInfo.innerHTML = '';
 }
 
 function renderCountryCard(obj) {
@@ -59,7 +56,6 @@ function renderCountryCard(obj) {
         <p class="country__subtitle">Population: <span class="subtitle__value">${population}</span></p>
         <p class="country__subtitle">Languages: <span class="subtitle__value">${Object.values(languages)}</span></p>`
     ).join('');
-    countryInfo.innerHTML = countryCard;
+    countryInfo.insertAdjacentHTML('beforeend', countryCard);
+    countryList.innerHTML = '';
 }
-
-
